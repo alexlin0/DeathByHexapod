@@ -1,20 +1,20 @@
 
 #include "sim_objects/default_trick_sys.sm"
 
-##include "TrickCompVision/include/TrickCompVision.hh"
+##include "ComputerVision/include/ComputerVision.hh"
 
 #define HZ20 0.05
 #define HZ30 0.03333333333
 #define HZ40 0.025
 #define HZ60 0.01666666666
 
-class TrickCompVisionSimObject : public Trick::SimObject {
+class ComputerVisionSimObject : public Trick::SimObject {
 
     public:
-        TrickCompVision tcv ;
+        ComputerVision tcv ;
 
         /** Constructor to add the jobs */
-        TrickCompVisionSimObject( double rate ) {
+        ComputerVisionSimObject( double rate ) {
             ("initialization") tcv.initialization() ;
             C1 (rate, "scheduled") tcv.change_tracking_color() ;
             C1 (rate, "scheduled") tcv.scheduled() ;
@@ -24,12 +24,12 @@ class TrickCompVisionSimObject : public Trick::SimObject {
 
     private:
         // This object is not copyable
-        void operator =(const TrickCompVision &) {};
+        void operator =(const ComputerVision &) {};
 
 } ;
 
 // Instantiations
-TrickCompVisionSimObject comp_vision(HZ60) ;
+ComputerVisionSimObject comp_vision(HZ60) ;
 
 // Connect objects
 void create_connections() {

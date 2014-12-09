@@ -4,7 +4,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "TrickCompVision.hh"
+#include "ComputerVision.hh"
 #include "sim_services/CommandLineArguments/include/command_line_protos.h"
 
 static void on_mouse( int e, int x, int y, int d, void *ptr ) {
@@ -18,7 +18,7 @@ static void on_mouse( int e, int x, int y, int d, void *ptr ) {
 }
 
 // Initialize HSV values that isolate yellow balls.
-TrickCompVision::TrickCompVision() :
+ComputerVision::ComputerVision() :
  low_h(60),
  high_h(100),
  low_s(90),
@@ -42,7 +42,7 @@ TrickCompVision::TrickCompVision() :
     mouse_pos.y = -1 ;
 }
 
-int TrickCompVision::initialization() {
+int ComputerVision::initialization() {
 
     if ( show_depth_window ) {
         cv::namedWindow("depth_image") ;
@@ -125,7 +125,7 @@ int TrickCompVision::initialization() {
     return 0 ;
 }
 
-int TrickCompVision::change_tracking_color() {
+int ComputerVision::change_tracking_color() {
 
     // check if new color in color screen chosen
     if ( mouse_pos.x != -1 ) {
@@ -160,7 +160,7 @@ int TrickCompVision::change_tracking_color() {
     return 0 ;
 }
 
-int TrickCompVision::scheduled() {
+int ComputerVision::scheduled() {
 
     if ( depth_cb.getLastFrameIndex() != last_depth_processed ) {
         last_depth_processed = depth_cb.getLastFrameIndex() ;
@@ -257,7 +257,7 @@ int TrickCompVision::scheduled() {
     return 0 ;
 }
 
-int TrickCompVision::shutdown() {
+int ComputerVision::shutdown() {
 
     depth.removeNewFrameListener(&depth_cb);
     depth.stop();

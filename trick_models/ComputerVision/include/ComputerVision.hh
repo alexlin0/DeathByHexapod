@@ -3,7 +3,7 @@
 PURPOSE:
     (CompVision interface.)
 LIBRARY DEPENDENCY:
-    ((../src/TrickCompVision.cpp))
+    ((../src/ComputerVision.cpp))
 */
 
 #ifndef _TRICKCOMPVISION_HH_
@@ -22,10 +22,10 @@ enum CameraResolution {
    RES_640x480
 } ;
 
-class TrickCompVision {
+class ComputerVision {
 
     public:
-        TrickCompVision() ;
+        ComputerVision() ;
         int initialization() ;
         int change_tracking_color() ;
         int scheduled() ;
@@ -73,7 +73,7 @@ class TrickCompVision {
 #endif
     private:
         // This object is not copyable
-        void operator =(const TrickCompVision &) {};
+        void operator =(const ComputerVision &) {};
 
 } ;
 
