@@ -1,0 +1,9 @@
+S_*
+chkpnt_*
+checkpoint*
+log_*
+send_hs
+*.pyc
+jitlib
+varserver_log
+

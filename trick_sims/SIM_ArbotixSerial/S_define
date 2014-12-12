@@ -1,0 +1,89 @@
+
+#include "sim_objects/default_trick_sys.sm"
+
+##include "ArbotixSerial/include/ArbotixSerial.hh"
+
+class ArbotixSerialSimObject : public Trick::SimObject {
+
+    public:
+        ArbotixSerial arbotix_serial ;
+
+        /** Constructor to add the jobs */
+        ArbotixSerialSimObject() {
+            ("initialization") arbotix_serial.initialization() ;
+            (1.0, "scheduled") test_binary_write() ;
+            //(1.0, "scheduled") test_encode_decode() ;
+            (0.05, "scheduled") test_binary_read() ;
+            ("shutdown") arbotix_serial.shutdown() ;
+        }
+
+        int test_binary_read() {
+            unsigned int jj ;
+            int ret ;
+            unsigned char decoded_array[256] ;
+            unsigned char read_buffer[256] ;
+
+            ret = arbotix_serial.read_data(read_buffer , sizeof(read_buffer)) ;
+            if( ret > 0 ) {
+                ret = cobs_decode( read_buffer, ret , decoded_array) ;
+                if ( ret != -1 ) {
+                    std::cout << "message = " ;
+                    for ( jj = 0 ; jj < ret ; jj++ ) {
+                        std::cout << (int)decoded_array[jj] << " " ;
+                    }
+                    std::cout << std::endl ;
+                }
+            }
+
+            return 0 ;
+        }
+
+        int test_binary_write() {
+            unsigned char test_array[] = { 7 , 9 , 0 , 1 , 0 , 0 , 2 , 3 , 4 , 5 , 6 , 0 , 18 , 22 } ;
+            unsigned char encoded_array[256] = { 0 } ;
+            int encoded_size, ii ;
+            encoded_size = cobs_encode(test_array , sizeof(test_array), encoded_array) ;
+/*
+            std::cout << "encoded = " ;
+            for ( ii = 0 ; ii < encoded_size ; ii++ ) {
+               std::cout << (int)encoded_array[ii] << " " ;
+            }
+            std::cout << std::endl ;
+*/
+            encoded_array[encoded_size++] = 0 ;
+            int ret = arbotix_serial.write_data(encoded_array, encoded_size) ;
+            //std::cout << "wrote to arbotix" << std::endl ;
+        }
+
+        int test_encode_decode() {
+            unsigned short test_array[] = { 1 , 2 } ;
+            unsigned char encoded_array[256] = { 0 } ;
+            int encoded_size, ii ;
+            encoded_size = cobs_encode(test_array , sizeof(test_array), encoded_array) ;
+            std::cout << "encoded = " ;
+            for ( ii = 0 ; ii < encoded_size ; ii++ ) {
+               std::cout << (int)encoded_array[ii] << " " ;
+            }
+            std::cout << std::endl ;
+
+            unsigned char decoded_array[256] ;
+            int decoded_size ;
+            decoded_size = cobs_decode(encoded_array , encoded_size, decoded_array) ;
+            std::cout << "decoded = " ;
+            for ( ii = 0 ; ii < decoded_size ; ii++ ) {
+               std::cout << (int)decoded_array[ii] << " " ;
+            }
+            std::cout << std::endl << std::endl ;
+
+        }
+
+} ;
+
+// Instantiations
+ArbotixSerialSimObject arbotix_serial ;
+
+// Connect objects
+void create_connections() {
+    //exec_set_terminate_time(10.0) ;
+}
+
